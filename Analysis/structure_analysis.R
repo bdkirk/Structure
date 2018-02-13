@@ -41,13 +41,22 @@ ggplot(struc, aes(block, ht_avg))+
   geom_point(aes(shape=treatment))
 #block 2 and block 4 vary in height
 
-###biomass
-ggplot(struc, aes(treatment, biomass))+
+###t_biomass
+ggplot(struc, aes(treatment, t_biomass))+
   geom_point(aes(color= block))
 #vogu seems to be very different from the rest
-ggplot(struc, aes(block, biomass))+
+ggplot(struc, aes(block, t_biomass))+
   geom_point(aes(shape=treatment))
 #large variation in blocks 2 and 4
+
+###all_biomass
+ggplot(struc, aes(treatment, all_biomass))+
+  geom_point(aes(color= block))
+#vogu seems to be very different from the rest
+ggplot(struc, aes(block, all_biomass))+
+  geom_point(aes(shape=treatment))
+#large variation in blocks 2 and 4
+
 
 ###density
 ggplot(struc, aes(treatment, density))+
@@ -90,7 +99,13 @@ ggplot(struc, aes(block, lai))+
   scale_fill_manual(values=cbPalette)+
   theme(legend.position="none")
 
-ggplot(struc, aes(block, biomass))+
+ggplot(struc, aes(block, t_biomass))+
+  geom_boxplot(aes(fill=treatment))+
+  facet_grid(.~treatment)+
+  scale_fill_manual(values=cbPalette)+
+  theme(legend.position="none")
+
+ggplot(struc, aes(block, all_biomass))+
   geom_boxplot(aes(fill=treatment))+
   facet_grid(.~treatment)+
   scale_fill_manual(values=cbPalette)+
@@ -107,7 +122,7 @@ str(struc)
 struc$block <- as.factor(struc$block)
 
 #add in package that stat dept is developing to look at residuals in a panel format.
-devtools::install_github("goodekat/ggResidpanel")
+#devtools::install_github("goodekat/ggResidpanel")
 
 library(ggResidpanel)
 
@@ -148,15 +163,26 @@ summary(lai_fit)
 lai_resid <- resid_panel(resid(lai_fit), fitted(lai_fit), bins = 20)
 lai_resid
 
-### 4)Biomass
+### 4)Tree Biomass (see Russell et al. 2017 or 2010)
 #a) model
-biomass_fit <- aov(biomass~ treatment + block, data = struc)
-summary(biomass_fit)
+t_biomass_fit <- aov(t_biomass~ treatment + block, data = struc)
+summary(t_biomass_fit)
 #Not significant
 
 #b) residuals
-biomass_resid <- resid_panel(resid(biomass_fit), fitted(biomass_fit), bins = 20)
-biomass_resid
+t_biomass_resid <- resid_panel(resid(t_biomass_fit), fitted(t_biomass_fit), bins = 20)
+t_biomass_resid
+
+### 4)All Biomass (see Russell et al. 2010)
+#a) model
+all_biomass_fit <- aov(all_biomass~ treatment + block, data = struc)
+summary(all_biomass_fit)
+#Not significant
+
+#b) residuals
+all_biomass_resid <- resid_panel(resid(all_biomass_fit), fitted(all_biomass_fit), bins = 20)
+all_biomass_resid
+
 
 ### 5)Density
 #a) model
@@ -168,37 +194,4 @@ summary(density_fit)
 density_resid <- resid_panel(resid(density_fit), fitted(density_fit), bins = 20)
 density_resid
 
-### check data for normality ####
 
-qqnorm(struc$dbh_avg)
-qqline(struc$dbh_avg, col= 'red')
-#assume normality for dbh_avg
-
-qqnorm(struc$ht_avg)
-qqline(struc$ht_avg, col = 'red')
-#assume normality for ht_avg
-
-qqnorm(struc$lai)
-qqline(struc$lai, col= 'red')
-#less normality but still close to line
-
-qqnorm(struc$density)
-qqline(struc$density, col = 'red')
-#steep line
-
-qqnorm(struc$biomass)
-qqline(struc$biomass, col = 'red')
-#normal data
-
-
-
-
-ggplot(struc, aes(lai, dbh_avg))+
-  geom_point()+
-  geom_smooth(method = "lm")
-
-ggplot(struc, aes(lai, density))+
-  geom_point()+
-  geom_smooth(method = "lm")
-
-##Look at ggresidpanel kgood git hub
