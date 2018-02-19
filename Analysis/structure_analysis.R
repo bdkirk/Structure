@@ -117,6 +117,9 @@ ggplot(struc, aes(block, density))+
   scale_fill_manual(values=cbPalette)+
   theme(legend.position="none")
 
+###########################################################################
+# Analysis
+
 ## Check class of data before analysis
 str(struc)
 struc$block <- as.factor(struc$block)
