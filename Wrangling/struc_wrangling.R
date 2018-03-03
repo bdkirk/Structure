@@ -48,3 +48,5 @@ setwd("~/M.S. Thesis/Data/GitHubProjects/Structure/Data/Tidy Data")
 write.csv(structure2, "structure_tidy.csv", row.names = FALSE)
 
 write.csv(structure4, "structure_M_SD_SE.csv", row.names = FALSE)
+
+#testing
